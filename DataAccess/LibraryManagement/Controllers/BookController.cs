@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using LibraryManagement.Exceptions;
 using static System.Console;
 
 namespace LibraryManagement.Controllers
@@ -18,7 +19,7 @@ namespace LibraryManagement.Controllers
             var publisher = _context.Publishers.Find(publisherId);
             if(publisher == null) 
             {
-                throw new NullReferenceException();
+                throw new NotFoundException(nameof(Publisher), publisherId);
             }
             var book = new Book
             {
@@ -29,6 +30,17 @@ namespace LibraryManagement.Controllers
                 Publisher = publisher
             };
             _context.Books.Add(book);
+            _context.SaveChanges();
+        }
+
+        public void DeleteBook(int id)
+        {
+            var book = _context.Books.SingleOrDefault(book => book.Id == id);
+            if(book == null)
+            {
+                throw new NotFoundException(nameof(Book), id);
+            }
+            _context.Books.Remove(book);
             _context.SaveChanges();
         }
 

@@ -1,4 +1,5 @@
 using System.Linq;
+using LibraryManagement.Exceptions;
 using static System.Console;
 
 namespace LibraryManagement.Controllers
@@ -25,6 +26,10 @@ namespace LibraryManagement.Controllers
         public void UpdatePublisher(int id, string name)
         {
             var publisher = _context.Publishers.Find(id);
+            if(publisher == null) 
+            {
+                throw new NotFoundException(nameof(Publisher), id);
+            }
             publisher.Name = name;
             _context.SaveChanges();
         }
